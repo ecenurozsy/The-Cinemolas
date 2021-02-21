@@ -24,7 +24,6 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         collectionV.dataSource = self
         collectionV.delegate = self
         collectionV.register(CollectionViewCell.nib(), forCellWithReuseIdentifier: CollectionViewCell.identifier)
-        
         collectionV.collectionViewLayout = ColumnFlowLayout(sutunSayisi: 3, minSutunAraligi: 10, minSatirAraligi: 20)
         getConnectionRevenue()
         getConnectionPopularity()
@@ -32,24 +31,23 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         getConnectionReleaseDate()
     }
     
-//
-//    func numberOfSections(in collectionView: UICollectionView) -> Int {
-//        return movies?.count ?? 0
-//    }
+
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return movies?.count ?? 0
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return names.count
+        return movies?[section]?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CollectionViewCell.identifier, for: indexPath) as! CollectionViewCell
-//        let movie = movies?[indexPath.section]?[indexPath.row]
-//        cell.configure(with: movie!)
-        
-        let cell = collectionV.dequeueReusableCell(withReuseIdentifier: CollectionViewCell.identifier, for: indexPath) as! CollectionViewCell
-        cell.lbl.text = names[indexPath.row]
-        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CollectionViewCell.identifier, for: indexPath) as! CollectionViewCell
+        let movie = movies?[indexPath.section]?[indexPath.row]
+        cell.configure(with: movie!)
         return cell
     }
+    
+    
     //select the movie
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
