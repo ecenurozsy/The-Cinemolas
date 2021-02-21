@@ -12,12 +12,14 @@ class CollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var img: UIImageView!
     
-    @IBOutlet weak var lbl: UILabel!
     
     static let identifier = "CollectionViewCell"
+
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        setCellShadow()
+        
     }
     
     public func configure(with movie: Result){
@@ -36,6 +38,20 @@ class CollectionViewCell: UICollectionViewCell {
     
     static func nib() -> UINib {
         return UINib(nibName: "CollectionViewCell", bundle: nil)
+    }
+    
+    func setCellShadow() {
+        let radius: CGFloat = 7
+        contentView.layer.cornerRadius = radius
+        contentView.layer.borderWidth = 1
+        contentView.layer.borderColor = UIColor.clear.cgColor
+        contentView.layer.masksToBounds = true
+        layer.shadowColor = UIColor.darkGray.cgColor
+        layer.shadowOffset = CGSize(width: 0.5, height: 1.5)
+        layer.shadowRadius = 3.0
+        layer.shadowOpacity = 1
+        layer.masksToBounds = false
+        layer.cornerRadius = radius
     }
 
 }
