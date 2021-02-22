@@ -7,6 +7,8 @@
 
 import UIKit
 import Alamofire
+import JEKScrollableSectionCollectionViewLayout
+
 
 class ViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource{
     
@@ -28,7 +30,12 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         collectionV.dataSource = self
         collectionV.delegate = self
         collectionV.register(CollectionViewCell.nib(), forCellWithReuseIdentifier: CollectionViewCell.identifier)
-        collectionV.collectionViewLayout = ColumnFlowLayout(sutunSayisi: 2, minSutunAraligi: 5, minSatirAraligi: 20)
+        let layout = JEKScrollableSectionCollectionViewLayout()
+        layout.itemSize = CGSize(width: 50, height: 50);
+        layout.headerReferenceSize = CGSize(width: 0, height: 22)
+        layout.minimumInteritemSpacing = 7
+        collectionV.collectionViewLayout = layout
+       
         collectionV.heightAnchor.constraint(equalTo: collectionV.widthAnchor, multiplier: 0.5).isActive = true
         collectionV.register(Header.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Header.identifier)
         
@@ -68,13 +75,10 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         self.navigationController?.pushViewController(movieVC, animated: true)
     }
     
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-//        if section == 0{
-//            return UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
-//        }
-//        return UIEdgeInsets(top: 10, left: 4, bottom: 10, right: 4)
-//    }
-//
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 10, left: 10, bottom: 15, right: 4)
+    }
+
     
     
     //https://api.themoviedb.org/3/discover/movie?api_key=c8c52447cfc2f01cd29e552111b5b99a&sort_by=release_date.desc
