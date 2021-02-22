@@ -18,7 +18,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Hsp-u5-4Jb">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="862"/>
+                                <rect key="frame" x="0.0" y="88" width="414" height="774"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="cGN-kq-96z">
                                     <size key="itemSize" width="150" height="200"/>
@@ -43,10 +43,10 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="Hsp-u5-4Jb" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="4er-Go-l8S"/>
-                            <constraint firstItem="Hsp-u5-4Jb" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="7XW-fJ-tyN"/>
-                            <constraint firstItem="Hsp-u5-4Jb" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Gcm-AU-xPE"/>
-                            <constraint firstItem="Hsp-u5-4Jb" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="topMargin" constant="-88" id="K1b-Dj-MQ0"/>
+                            <constraint firstItem="Hsp-u5-4Jb" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="6jC-GE-FRw"/>
+                            <constraint firstItem="Hsp-u5-4Jb" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="ClS-Sg-5Ja"/>
+                            <constraint firstItem="Hsp-u5-4Jb" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="H4k-6I-QXU"/>
+                            <constraint firstItem="Hsp-u5-4Jb" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="lfc-LG-m8o"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="CeF-xe-Pq2"/>
@@ -88,6 +88,11 @@
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tdq-a1-nVw">
                                 <rect key="frame" x="10" y="219" width="185" height="243"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <integer key="value" value="20"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                             </imageView>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="35T-aY-mqp">
                                 <rect key="frame" x="20" y="596" width="374" height="266"/>
@@ -133,9 +138,9 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Overview" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U7E-Qb-gGG">
-                                <rect key="frame" x="20" y="578" width="75" height="21"/>
+                                <rect key="frame" x="20" y="578" width="79" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="17"/>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="18"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -166,6 +171,7 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="f4t-b1-sDE">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="barTintColor" systemColor="opaqueSeparatorColor"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
@@ -185,6 +191,9 @@
         <image name="star" width="174" height="147"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="opaqueSeparatorColor">
+            <color red="0.77647058823529413" green="0.77647058823529413" blue="0.78431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

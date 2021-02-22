@@ -63,8 +63,7 @@ class MovieDetailVc: UIViewController {
         return UIImage(data: data)!
     }
     
-    func customizeImage(){
-        forwardImg.layer.cornerRadius = 20
-    }
-    
 }
+
+
+

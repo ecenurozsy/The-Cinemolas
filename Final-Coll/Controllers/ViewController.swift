@@ -20,18 +20,28 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //to provide come back with swipe
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = nil;
+        
+        //customize
         collectionV.dataSource = self
         collectionV.delegate = self
         collectionV.register(CollectionViewCell.nib(), forCellWithReuseIdentifier: CollectionViewCell.identifier)
         collectionV.collectionViewLayout = ColumnFlowLayout(sutunSayisi: 2, minSutunAraligi: 5, minSatirAraligi: 20)
         collectionV.heightAnchor.constraint(equalTo: collectionV.widthAnchor, multiplier: 0.5).isActive = true
         collectionV.register(Header.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Header.identifier)
+        
+        //load data
         getConnectionRevenue()
         getConnectionPopularity()
         getConnectionTopRated()
         getConnectionReleaseDate()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.setNavigationBarHidden(true, animated: false)
+    }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return movies?.count ?? 0
