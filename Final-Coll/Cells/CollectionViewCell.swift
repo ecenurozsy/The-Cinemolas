@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Nuke
 
 class CollectionViewCell: UICollectionViewCell {
 
@@ -25,21 +26,33 @@ class CollectionViewCell: UICollectionViewCell {
     public func configure(with movie: Result){
         //Example link of a image:
         //https://image.tmdb.org/t/p/original/ueoUHgATjj7ePyOZbFmBFzB3kHi.jpg
+//        if let path = movie.posterPath {
+//            let mPath = "https://image.tmdb.org/t/p/original" + path
+//            let url = URL(string: mPath)
+//            let data = try! Data(contentsOf: url!)
+//            self.img.image = UIImage(data: data)
+//        }
+//        else{
+//            self.img.image = UIImage(named: "nopic.png")
+//        }
         if let path = movie.posterPath {
-            let mPath = "https://image.tmdb.org/t/p/original" + path
-            let url = URL(string: mPath)
-            let data = try! Data(contentsOf: url!)
-            self.img.image = UIImage(data: data)
-        }
-        else{
-            self.img.image = UIImage(named: "nopic.png")
-        }
+                downImageWithNuke(path: path)
+            }
+            else{
+                self.img.image = UIImage(named: "nopic.png")
+            }
     }
     
     static func nib() -> UINib {
         return UINib(nibName: "CollectionViewCell", bundle: nil)
     }
     
+    func downImageWithNuke(path: String) {
+        let mPath = "https://image.tmdb.org/t/p/original" + path
+        let url = URL(string: mPath)
+        Nuke.loadImage(with: url!, into: self.img)
+    }
+
     func setCellShadow() {
         let radius: CGFloat = 7
         contentView.layer.cornerRadius = radius

@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import Nuke
+
 
 class MovieDetailVc: UIViewController {
 
@@ -42,18 +44,32 @@ class MovieDetailVc: UIViewController {
             lblStar.text = "*" + "/10"
         }
         lblLanguage.text = movie?.originalLanguage.uppercased()
-        if let backPath = movie?.backdropPath{
-            image.image = downImage(path: backPath)
-        }else{
-            image.image = UIImage(named: "nopic.png")
+//        if let backPath = movie?.backdropPath{
+//            image.image = downImage(path: backPath)
+//        }else{
+//            image.image = UIImage(named: "nopic.png")
+//        }
+//        if let forwardPath = movie?.posterPath{
+//            forwardImg.image = downImage(path: forwardPath)
+//        }else{
+//            forwardImg.image = UIImage(named: "nopic.png")
+//        }
+        if let backPath = movie?.backdropPath, let forwardPath = movie?.posterPath{
+            downImageWithNuke(pathForward: forwardPath, pathBack: backPath)
         }
-        if let forwardPath = movie?.posterPath{
-            forwardImg.image = downImage(path: forwardPath)
-        }else{
-            forwardImg.image = UIImage(named: "nopic.png")
-        }
-       
         
+    }
+    
+    func downImageWithNuke(pathForward: String, pathBack: String) {
+        let fPath = "https://image.tmdb.org/t/p/original" + pathForward
+        let fUrl = URL(string: fPath)
+        
+        let bPath = "https://image.tmdb.org/t/p/original" + pathBack
+        let bUrl = URL(string: bPath)
+        
+        Nuke.loadImage(with: fUrl!, into: forwardImg)
+        Nuke.loadImage(with: bUrl!, into: image)
+
     }
 
     func downImage(path: String) -> UIImage{
