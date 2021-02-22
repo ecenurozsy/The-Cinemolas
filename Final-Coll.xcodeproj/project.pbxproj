@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		260758EE25E41027009B37B7 /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260758ED25E41027009B37B7 /* SplashViewController.swift */; };
 		262CAC1125E28C0F00B069C2 /* Header.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262CAC1025E28C0F00B069C2 /* Header.swift */; };
 		26C5AE3725E1EDC100835121 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C5AE3625E1EDC100835121 /* AppDelegate.swift */; };
 		26C5AE3925E1EDC100835121 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C5AE3825E1EDC100835121 /* SceneDelegate.swift */; };
@@ -23,6 +24,7 @@
 
 /* Begin PBXFileReference section */
 		0168791307D1E4D2116EECEF /* Pods-Final-Coll.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Final-Coll.release.xcconfig"; path = "Target Support Files/Pods-Final-Coll/Pods-Final-Coll.release.xcconfig"; sourceTree = "<group>"; };
+		260758ED25E41027009B37B7 /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
 		262CAC1025E28C0F00B069C2 /* Header.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Header.swift; sourceTree = "<group>"; };
 		26C5AE3325E1EDC100835121 /* Final-Coll.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Final-Coll.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		26C5AE3625E1EDC100835121 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -99,6 +101,7 @@
 			children = (
 				26C5AE9D25E268A600835121 /* MovieDetailVc.swift */,
 				26C5AE3A25E1EDC100835121 /* ViewController.swift */,
+				260758ED25E41027009B37B7 /* SplashViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -247,6 +250,7 @@
 				26C5AE5325E1EE9300835121 /* Constants.swift in Sources */,
 				262CAC1125E28C0F00B069C2 /* Header.swift in Sources */,
 				26C5AE9E25E268A600835121 /* MovieDetailVc.swift in Sources */,
+				260758EE25E41027009B37B7 /* SplashViewController.swift in Sources */,
 				26C5AE3B25E1EDC100835121 /* ViewController.swift in Sources */,
 				26C5AE6525E1F97C00835121 /* CollectionViewCell.swift in Sources */,
 				26C5AE3725E1EDC100835121 /* AppDelegate.swift in Sources */,

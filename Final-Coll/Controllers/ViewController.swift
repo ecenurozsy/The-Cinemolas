@@ -30,12 +30,17 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         collectionV.dataSource = self
         collectionV.delegate = self
         collectionV.register(CollectionViewCell.nib(), forCellWithReuseIdentifier: CollectionViewCell.identifier)
+        
+        //vertical scroll
         let layout = JEKScrollableSectionCollectionViewLayout()
         layout.itemSize = CGSize(width: 50, height: 50);
         layout.headerReferenceSize = CGSize(width: 0, height: 22)
-        layout.minimumInteritemSpacing = 7
+        layout.minimumInteritemSpacing = 9
         collectionV.collectionViewLayout = layout
-       
+        //
+        
+  
+        
         collectionV.heightAnchor.constraint(equalTo: collectionV.widthAnchor, multiplier: 0.5).isActive = true
         collectionV.register(Header.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Header.identifier)
         
@@ -45,6 +50,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         getConnectionTopRated()
         getConnectionReleaseDate()
     }
+    
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.setNavigationBarHidden(true, animated: false)
@@ -60,6 +66,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CollectionViewCell.identifier, for: indexPath) as! CollectionViewCell
+        
         let movie = movies?[indexPath.section]?[indexPath.row]
         cell.configure(with: movie!)
         
@@ -108,6 +115,8 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         }
         return header
     }
+    
+    
     //Başlangıç boyutunu
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         if section == 0 {
@@ -173,18 +182,16 @@ extension ViewController: UICollectionViewDelegateFlowLayout{
         let height : CGFloat
         if indexPath.section == 0 {
             // First section
-            width = collectionView.frame.width/2
+            width = collectionView.frame.width/1.75
             height = width*1.5
         } else {
             // Second section
-            width = collectionView.frame.width/2.5
+            width = collectionView.frame.width/2.25
             height = width*1.5
         }
         return CGSize(width: width, height: height)
-//        return CGSize(width: collectionView.frame.width/2.5, height: collectionView.frame.width/2)
+
     }
-    
-    
     
 }
 
