@@ -22,6 +22,7 @@ class CollectionViewCell: UICollectionViewCell {
         setCellShadow()
         
     }
+   
     
     public func configure(with movie: Result){
         //Example link of a image:
@@ -67,4 +68,10 @@ class CollectionViewCell: UICollectionViewCell {
         layer.cornerRadius = radius
     }
 
+}
+
+extension CollectionViewCell: UIScrollViewDelegate{
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        print("item")
+    }
 }
