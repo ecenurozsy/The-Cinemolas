@@ -17,7 +17,7 @@ class SplitViewController: UISplitViewController {
         self.preferredDisplayMode = .allVisible;
         self.maximumPrimaryColumnWidth = width/2;
         self.minimumPrimaryColumnWidth = heigth/2;
-        self.view.backgroundColor = UIColor.white
+        self.view.backgroundColor = UIColor.systemGray6
     }
 
 }
