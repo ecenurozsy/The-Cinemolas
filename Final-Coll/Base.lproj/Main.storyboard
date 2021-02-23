@@ -263,7 +263,7 @@
         <!--Split View Controller-->
         <scene sceneID="tgH-sT-WpG">
             <objects>
-                <splitViewController storyboardIdentifier="SplitVC" allowDoubleColumnStyle="YES" maximumPrimaryColumnWidth="300" minimumPrimaryColumnWidth="200" behavior="tile" preferredPrimaryColumnWidthFraction="1" id="Fad-w7-6vu" customClass="SplitViewController" customModule="Final_Coll" customModuleProvider="target" sceneMemberID="viewController">
+                <splitViewController storyboardIdentifier="SplitVC" allowDoubleColumnStyle="YES" behavior="tile" id="Fad-w7-6vu" customClass="SplitViewController" customModule="Final_Coll" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="5f5-vJ-nQv"/>
                     <connections>
                         <segue destination="aX7-fg-Qi7" kind="relationship" relationship="detailViewController" id="c7O-6H-cOU"/>
