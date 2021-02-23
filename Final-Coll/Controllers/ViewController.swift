@@ -9,12 +9,9 @@ import UIKit
 import Alamofire
 import JEKScrollableSectionCollectionViewLayout
 
-class ViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDataSourcePrefetching{
+class ViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource{
     
     
-    func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
-
-    }
     var moviesPopularity: [Result]? = []
     var moviesRevenue: [Result]? = []
     var moviesTopRated: [Result]? = []
@@ -23,30 +20,30 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     var pages = [2,2,2,2]
     var lastIndex = [19,19,19,19]
     let titles = ["  Popularity","  Top Rated","  Release Date","  Revenue"]
+    var isLoading = false
     
     @IBOutlet weak var collectionV: UICollectionView!
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         
         //to provide come back with swipe
         self.navigationController?.interactivePopGestureRecognizer?.delegate = nil;
         
-        //customize
+        //register
         collectionV.dataSource = self
         collectionV.delegate = self
         collectionV.register(CollectionViewCell.nib(), forCellWithReuseIdentifier: CollectionViewCell.identifier)
+        collectionV.heightAnchor.constraint(equalTo: collectionV.widthAnchor, multiplier: 0.5).isActive = true
+        collectionV.register(Header.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Header.identifier)
         
-        //vertical scroll
+        //for horizontol scroll
         let layout = JEKScrollableSectionCollectionViewLayout()
         layout.itemSize = CGSize(width: 50, height: 50);
         layout.headerReferenceSize = CGSize(width: 0, height: 22)
         layout.minimumInteritemSpacing = 9
         collectionV.collectionViewLayout = layout
-        //
-        
-        collectionV.heightAnchor.constraint(equalTo: collectionV.widthAnchor, multiplier: 0.5).isActive = true
-        collectionV.register(Header.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Header.identifier)
         
         //load data
         getConnectionRevenue()
@@ -55,12 +52,8 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         getConnectionReleaseDate()
         
         
-        //deneme
-        collectionV.prefetchDataSource = self
-        
         
     }
-    
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.setNavigationBarHidden(true, animated: false)
@@ -76,47 +69,26 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CollectionViewCell.identifier, for: indexPath) as! CollectionViewCell
-        
         let movie = movies?[indexPath.section]?[indexPath.row]
         cell.configure(with: movie!)
         
-        return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        if indexPath.row == self.lastIndex[indexPath.section]{
-            self.loadData(page: pages[indexPath.section], section: indexPath.section)
-            self.lastIndex[indexPath.section] += lastIndex[indexPath.section]
-        }
+        return cell 
     }
     //Go to Movie Detail Page
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
         let movieVC = mainStoryboard.instantiateViewController(withIdentifier: "MovieDetailVc") as! MovieDetailVc
         movieVC.movie = movies?[indexPath.section]?[indexPath.row]
-        self.navigationController?.pushViewController(movieVC, animated: true)
+        splitViewController?.showDetailViewController(movieVC, sender: nil)
+        //self.navigationController?.pushViewController(movieVC, animated: true)
     }
-    
-//    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-//
-//    }
-//
-//    //Scrollun sonuna ulaşınca bu oluyor aslında (ama şuan benim elimdeki vertical scroll için oluyor sadece bu)
-//    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-//        print("scrollViewDidEndDecelerating")
-//    }
-//
-//    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool, forItemAt indexPath: IndexPath) {
-//
-//    }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 10, left: 10, bottom: 15, right: 4)
     }
     
-
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Header.identifier, for: indexPath) as! Header 
+        let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Header.identifier, for: indexPath) as! Header
         header.label.text = titles[indexPath.section]
         if(indexPath.section == 0){
             header.setLabel(size: 30, bold: true)
@@ -126,39 +98,57 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         return header
     }
     
-    
-    //Başlangıç boyutunu
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         if section == 0 {
             return CGSize(width: view.frame.size.width, height: 60)
         }else{
             return CGSize(width: view.frame.size.width, height: 40)
         }
-        
     }
     
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if indexPath.row == self.lastIndex[indexPath.section]{
+
+            self.loadData(page: pages[indexPath.section], section: indexPath.section)
+            self.lastIndex[indexPath.section] += lastIndex[indexPath.section]
+
+
+        }
+    }
+
     //API REQUEST SIDE:
     
     func loadData(page: Int, section: Int){
         if page > 500 {
             return
         }
-        //Popularity
-        if section == 0 {
-            self.getConnectionPopularity(page: String(page))
-        }
-        //Top Rated
-        if section == 1 {
-            self.getConnectionTopRated(page: String(page))
-        }
-        //Release Date
-        if section == 2 {
-            self.getConnectionReleaseDate(page: String(page))
-        }
-        //Revenue
-        if section == 3 {
-            self.getConnectionRevenue(page: String(page))
-        }
+        if !self.isLoading {
+                    self.isLoading = true
+                    DispatchQueue.global().async {
+                        // Fake background loading task for 2 seconds
+                        sleep(2)
+                        // Download more data here
+                        DispatchQueue.main.async {
+                            //Popularity
+                            if section == 0 {
+                                self.getConnectionPopularity(page: String(page))
+                            }
+                            //Top Rated
+                            if section == 1 {
+                                self.getConnectionTopRated(page: String(page))
+                            }
+                            //Release Date
+                            if section == 2 {
+                                self.getConnectionReleaseDate(page: String(page))
+                            }
+                            //Revenue
+                            if section == 3 {
+                                self.getConnectionRevenue(page: String(page))
+                            }
+                            self.isLoading = false
+                        }
+                    }
+                }
         self.pages[section] += 1
     }
     
@@ -253,5 +243,11 @@ extension ViewController: UICollectionViewDelegateFlowLayout{
     }
     
 }
+//veri aktarımı için
+
+//let veri
+//let VC = self.storyboard?.instanitateViewController(identifier: ViewController) as! ViewController
+//VC.company = veri
+//splitViewController?.showDetailViewController(VC, sender: ni)
 
 

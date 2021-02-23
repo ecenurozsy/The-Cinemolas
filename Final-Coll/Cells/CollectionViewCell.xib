@@ -38,7 +38,7 @@
             <connections>
                 <outlet property="img" destination="PJC-sz-dJF" id="hol-at-nOG"/>
             </connections>
-            <point key="canvasLocation" x="-70.28985507246378" y="26.785714285714285"/>
+            <point key="canvasLocation" x="-71.014492753623188" y="26.785714285714285"/>
         </collectionViewCell>
     </objects>
 </document>
