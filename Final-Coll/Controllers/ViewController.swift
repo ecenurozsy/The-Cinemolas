@@ -7,14 +7,22 @@
 
 import UIKit
 import Alamofire
+import JEKScrollableSectionCollectionViewLayout
 
-class ViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource{
+class ViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDataSourcePrefetching{
     
+    
+    func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+
+    }
     var moviesPopularity: [Result]? = []
     var moviesRevenue: [Result]? = []
     var moviesTopRated: [Result]? = []
     var moviesReleaseDate: [Result]? = []
     var movies: [[Result]?]?
+    var pages = [2,2,2,2]
+    var lastIndex = [19,19,19,19]
+    let titles = ["  Popularity","  Top Rated","  Release Date","  Revenue"]
     
     @IBOutlet weak var collectionV: UICollectionView!
     
@@ -28,7 +36,15 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         collectionV.dataSource = self
         collectionV.delegate = self
         collectionV.register(CollectionViewCell.nib(), forCellWithReuseIdentifier: CollectionViewCell.identifier)
-        collectionV.collectionViewLayout = ColumnFlowLayout(sutunSayisi: 2, minSutunAraligi: 5, minSatirAraligi: 20)
+        
+        //vertical scroll
+        let layout = JEKScrollableSectionCollectionViewLayout()
+        layout.itemSize = CGSize(width: 50, height: 50);
+        layout.headerReferenceSize = CGSize(width: 0, height: 22)
+        layout.minimumInteritemSpacing = 9
+        collectionV.collectionViewLayout = layout
+        //
+        
         collectionV.heightAnchor.constraint(equalTo: collectionV.widthAnchor, multiplier: 0.5).isActive = true
         collectionV.register(Header.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Header.identifier)
         
@@ -37,7 +53,14 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         getConnectionPopularity()
         getConnectionTopRated()
         getConnectionReleaseDate()
+        
+        
+        //deneme
+        collectionV.prefetchDataSource = self
+        
+        
     }
+    
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.setNavigationBarHidden(true, animated: false)
@@ -53,14 +76,20 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CollectionViewCell.identifier, for: indexPath) as! CollectionViewCell
+        
         let movie = movies?[indexPath.section]?[indexPath.row]
         cell.configure(with: movie!)
         
         return cell
     }
     
-    
-    //select the movie
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        if indexPath.row == self.lastIndex[indexPath.section]{
+            self.loadData(page: pages[indexPath.section], section: indexPath.section)
+            self.lastIndex[indexPath.section] += lastIndex[indexPath.section]
+        }
+    }
+    //Go to Movie Detail Page
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
         let movieVC = mainStoryboard.instantiateViewController(withIdentifier: "MovieDetailVc") as! MovieDetailVc
@@ -68,31 +97,23 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         self.navigationController?.pushViewController(movieVC, animated: true)
     }
     
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-//        if section == 0{
-//            return UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 0)
-//        }
-//        return UIEdgeInsets(top: 10, left: 4, bottom: 10, right: 4)
+//    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+//
 //    }
 //
+//    //Scrollun sonuna ulaşınca bu oluyor aslında (ama şuan benim elimdeki vertical scroll için oluyor sadece bu)
+//    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+//        print("scrollViewDidEndDecelerating")
+//    }
+//
+//    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool, forItemAt indexPath: IndexPath) {
+//
+//    }
     
-    
-    //https://api.themoviedb.org/3/discover/movie?api_key=c8c52447cfc2f01cd29e552111b5b99a&sort_by=release_date.desc
-    func getConnectionPopularity(){
-        let params = [ "api_key" : Constants.APIkey,"sort_by": "popularity.desc"]
-        let url = "https://api.themoviedb.org/3/discover/movie"
-        AF.request(url, method: .get, parameters: params).responseJSON { (res) in
-            
-            if (res.response?.statusCode == 200) {
-                print("status==200")
-                let movie_api = try? JSONDecoder().decode(MovieAPI.self, from: res.data!)
-                self.moviesPopularity = movie_api?.results
-                self.movies = [self.moviesPopularity,self.moviesPopularity,self.moviesReleaseDate,self.moviesRevenue]
-                self.collectionV.reloadData()
-            }
-        }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 10, left: 10, bottom: 15, right: 4)
     }
-    let titles = ["  Popularity","  Top Rated","  Release Date","  Revenue"]
+    
 
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: Header.identifier, for: indexPath) as! Header 
@@ -104,6 +125,8 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         }
         return header
     }
+    
+    
     //Başlangıç boyutunu
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         if section == 0 {
@@ -114,46 +137,94 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         
     }
     
-    func getConnectionRevenue(){
-        let params = [ "api_key" : Constants.APIkey,"sort_by": "revenue.desc"]
+    //API REQUEST SIDE:
+    
+    func loadData(page: Int, section: Int){
+        if page > 500 {
+            return
+        }
+        //Popularity
+        if section == 0 {
+            self.getConnectionPopularity(page: String(page))
+        }
+        //Top Rated
+        if section == 1 {
+            self.getConnectionTopRated(page: String(page))
+        }
+        //Release Date
+        if section == 2 {
+            self.getConnectionReleaseDate(page: String(page))
+        }
+        //Revenue
+        if section == 3 {
+            self.getConnectionRevenue(page: String(page))
+        }
+        self.pages[section] += 1
+    }
+    
+    //https://api.themoviedb.org/3/discover/movie?api_key=c8c52447cfc2f01cd29e552111b5b99a&sort_by=release_date.desc&page=2
+    func getConnectionPopularity(page: String = "1"){
+        let params = [ "api_key" : Constants.APIkey,"sort_by": "popularity.desc","page": page]
         let url = "https://api.themoviedb.org/3/discover/movie"
         AF.request(url, method: .get, parameters: params).responseJSON { (res) in
             
             if (res.response?.statusCode == 200) {
                 print("status==200")
                 let movie_api = try? JSONDecoder().decode(MovieAPI.self, from: res.data!)
-                self.moviesRevenue = movie_api?.results
+                let movie = movie_api?.results
+                //self.moviesPopularity = movie_api?.results
+                self.moviesPopularity = self.moviesPopularity! + movie!
                 self.movies = [self.moviesPopularity,self.moviesTopRated,self.moviesReleaseDate,self.moviesRevenue]
                 self.collectionV.reloadData()
-                
             }
         }
     }
     
-    func getConnectionTopRated(){
-        let params = [ "api_key" : Constants.APIkey,"sort_by": "vote_count.desc"]
+    func getConnectionRevenue(page: String = "1"){
+        let params = [ "api_key" : Constants.APIkey,"sort_by": "revenue.desc", "page": page]
         let url = "https://api.themoviedb.org/3/discover/movie"
         AF.request(url, method: .get, parameters: params).responseJSON { (res) in
-            
             if (res.response?.statusCode == 200) {
                 print("status==200")
                 let movie_api = try? JSONDecoder().decode(MovieAPI.self, from: res.data!)
-                self.moviesTopRated = movie_api?.results
+                let movie = movie_api?.results
+                //self.moviesRevenue = movie_api?.results
+                self.moviesRevenue = self.moviesRevenue! + movie!
                 self.movies = [self.moviesPopularity,self.moviesTopRated,self.moviesReleaseDate,self.moviesRevenue]
                 self.collectionV.reloadData()
             }
         }
     }
- 
-    func getConnectionReleaseDate(){
-        let params = [ "api_key" : Constants.APIkey,"sort_by": "release_date.desc"]
+    
+    func getConnectionTopRated(page: String = "1"){
+        let params = [ "api_key" : Constants.APIkey,"sort_by": "vote_count.desc", "page": page]
         let url = "https://api.themoviedb.org/3/discover/movie"
         AF.request(url, method: .get, parameters: params).responseJSON { (res) in
             
             if (res.response?.statusCode == 200) {
                 print("status==200")
                 let movie_api = try? JSONDecoder().decode(MovieAPI.self, from: res.data!)
-                self.moviesReleaseDate = movie_api?.results
+                let movie = movie_api?.results
+                //self.moviesTopRated = movie_api?.results
+                self.moviesTopRated = self.moviesTopRated! + movie!
+                self.movies = [self.moviesPopularity,self.moviesTopRated,self.moviesReleaseDate,self.moviesRevenue]
+                self.collectionV.reloadData()
+            }
+        }
+        
+    }
+ 
+    func getConnectionReleaseDate(page: String = "1"){
+        let params = [ "api_key" : Constants.APIkey,"sort_by": "release_date.desc", "page": page ]
+        let url = "https://api.themoviedb.org/3/discover/movie"
+        AF.request(url, method: .get, parameters: params).responseJSON { (res) in
+            
+            if (res.response?.statusCode == 200) {
+                print("status==200")
+                let movie_api = try? JSONDecoder().decode(MovieAPI.self, from: res.data!)
+                let movie = movie_api?.results
+                //self.moviesReleaseDate = movie_api?.results
+                self.moviesReleaseDate = self.moviesReleaseDate! + movie!
                 self.movies = [self.moviesPopularity,self.moviesTopRated,self.moviesReleaseDate,self.moviesRevenue]
                 self.collectionV.reloadData()
 
@@ -161,6 +232,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         }
     }
 }
+
 
 
 extension ViewController: UICollectionViewDelegateFlowLayout{
@@ -169,18 +241,17 @@ extension ViewController: UICollectionViewDelegateFlowLayout{
         let height : CGFloat
         if indexPath.section == 0 {
             // First section
-            width = collectionView.frame.width/2
+            width = collectionView.frame.width/1.75
             height = width*1.5
         } else {
             // Second section
-            width = collectionView.frame.width/2.5
+            width = collectionView.frame.width/2.25
             height = width*1.5
         }
         return CGSize(width: width, height: height)
-//        return CGSize(width: collectionView.frame.width/2.5, height: collectionView.frame.width/2)
+
     }
     
-    
-    
 }
+
 
