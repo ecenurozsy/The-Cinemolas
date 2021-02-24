@@ -51,8 +51,6 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         getConnectionTopRated()
         getConnectionReleaseDate()
         
-        
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -80,7 +78,6 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         let movieVC = mainStoryboard.instantiateViewController(withIdentifier: "MovieDetailVc") as! MovieDetailVc
         movieVC.movie = movies?[indexPath.section]?[indexPath.row]
         splitViewController?.showDetailViewController(movieVC, sender: nil)
-        //self.navigationController?.pushViewController(movieVC, animated: true)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
@@ -108,16 +105,12 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         if indexPath.row == self.lastIndex[indexPath.section]{
-
             self.loadData(page: pages[indexPath.section], section: indexPath.section)
             self.lastIndex[indexPath.section] += lastIndex[indexPath.section]
-
-
         }
     }
 
     //API REQUEST SIDE:
-    
     func loadData(page: Int, section: Int){
         if page > 500 {
             return
@@ -224,7 +217,7 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
 }
 
 
-
+//Different movie images size for different sections
 extension ViewController: UICollectionViewDelegateFlowLayout{
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width : CGFloat
@@ -239,15 +232,7 @@ extension ViewController: UICollectionViewDelegateFlowLayout{
             height = width*1.5
         }
         return CGSize(width: width, height: height)
-
     }
-    
 }
-//veri aktarımı için
-
-//let veri
-//let VC = self.storyboard?.instanitateViewController(identifier: ViewController) as! ViewController
-//VC.company = veri
-//splitViewController?.showDetailViewController(VC, sender: ni)
 
 
