@@ -29,31 +29,22 @@ class MovieDetailVc: UIViewController {
     }
     
     func setData(){
+        
         if movie?.adult == true {
             imgAdult.image = UIImage(named: "adultY.png")
         }else{
             imgAdult.image = UIImage(named: "adultN.png")
         }
-        
         lblMovieTitle.text = movie?.originalTitle
         txtDetail.text = movie?.overview
         lblDate.text = movie?.releaseDate
         if let voteAverage = movie?.voteAverage{
             lblStar.text = String(voteAverage) + "/10"
-        }else{
+        }
+        else{
             lblStar.text = "*" + "/10"
         }
         lblLanguage.text = movie?.originalLanguage.uppercased()
-//        if let backPath = movie?.backdropPath{
-//            image.image = downImage(path: backPath)
-//        }else{
-//            image.image = UIImage(named: "nopic.png")
-//        }
-//        if let forwardPath = movie?.posterPath{
-//            forwardImg.image = downImage(path: forwardPath)
-//        }else{
-//            forwardImg.image = UIImage(named: "nopic.png")
-//        }
         if let backPath = movie?.backdropPath, let forwardPath = movie?.posterPath{
             downImageWithNuke(pathForward: forwardPath, pathBack: backPath)
         }
