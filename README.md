@@ -13,6 +13,7 @@ This app show movies and their detail with using TMDb API.
 ## Getting started
 - Clone 
 - Get the API Key from https://developers.themoviedb.org/3/
+- Write the key into Model -> Constants.swift 
 - pod install
 - build and run the project
 
